@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mkdir -p "$(dirname \"$0\")/logs"
+$(dirname "$0")/maintain > "$(dirname \"$0\")/logs/$(date --iso-8601=seconds).txt"
