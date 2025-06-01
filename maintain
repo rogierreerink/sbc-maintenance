@@ -36,8 +36,6 @@ echo Archiving the filesystem...
 
 dd if="$DEVICE" bs=64M | pv | pigz --best -p $PROCESSES | dd of="$FILEPATH"
 
-echo Done archiving the filesystem.
-
 ###
 # Upgrade the system.
 ###
@@ -46,7 +44,5 @@ echo Upgrading installed packages...
 
 apt update
 apt upgrade -y
-
-echo Done upgrading installed packages.
 
 echo Done!
