@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# must be run as root.
+if [[ $(whoami) != "root" ]]; then
+	echo script must be run as root.
+	exit 1
+fi
+
+# pigz must be installed.
+dpkg-query -l pigz &>/dev/null
+if [[ $? != 0 ]]; then
+	echo pigz must be installed.
+	exit 1
+fi
+
+# pv must be installed.
+dpkg-query -l pv &>/dev/null
+if [[ $? != 0 ]]; then
+	echo pv must be installed.
+	exit 1
+fi
+
+###
+# Archive the filesystem
+###
+
+echo Archiving the filesystem...
+
+DEVICE="/dev/mmcblk2"
+FILEPATH="mmcblk2_$(date --iso-8601=seconds)"
+
+dd if="$DEVICE" bs=64M | pv | pigz --best | dd of="$FILEPATH"
+
+echo Done archiving the filesystem.
+
+###
+# Upgrade the system.
+###
+
+echo Upgrading installed packages...
+
+apt update
+apt upgrade -y
+
+echo Done upgrading installed packages.
+
+echo Done!
