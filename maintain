@@ -29,6 +29,19 @@ echo Loading config...
 source "$(dirname "$0")/config"
 
 ###
+# Check whether there are updates
+###
+
+echo Checking for updates...
+
+apt update
+
+if [[ $(apt list --upgradable | wc -l) == 1 ]]; then
+	echo "Nothing to be done."
+	exit 0
+fi
+
+###
 # Archive the filesystem
 ###
 
@@ -42,7 +55,6 @@ dd if="$DEVICE" bs=64M | pv | pigz --best -p $PROCESSES | dd of="$FILEPATH"
 
 echo Upgrading installed packages...
 
-apt update
 apt upgrade -y
 
 echo Done!
